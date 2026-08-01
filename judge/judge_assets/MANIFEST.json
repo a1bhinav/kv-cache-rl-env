@@ -1,0 +1,8 @@
+{
+  "starter/ASSETS.json": "8859b1153a2efa737cb50e79bc1920f98880d3d40185fdc1fadcba879995c7fd",
+  "starter/model.py": "7be584286095564c41f2ad961bb01f15b794ea2fe47fa26e232e41d5f978dba4",
+  "starter/sample_text.txt": "cbe313fb591a7fcdbc063705e387da2256b9523e2a6d80d1ba892b58451283c9",
+  "starter/vocab.json": "7cf71b0d722020cbd2d06864cfb3220574e967c93f4f9b0be3eaabbee9c39520",
+  "starter/weights.pt": "4bf2b61ea79103efa820b05fda874132f9a98855d74a9f037d8863b485dd6bb6",
+  "gen_corpus.py": "f5a51a5765473db10ecd35e0e2033f3290f7237b37a633082a96bc7633d6f508"
+}
