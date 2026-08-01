@@ -4,6 +4,8 @@ An RL environment for LLM training in which the agent implements batched KV-cach
 greedy decoding for a small transformer, and is scored mechanically on exact
 equivalence to a reference decoder and on how much faster it runs.
 
+![Environment overview](docs/overview.png)
+
 ## Why this exists
 
 RL environments are only as good as their reward. A reward for an engineering task has
@@ -64,6 +66,28 @@ cap is reached at 32×. Correctness and speed cannot be traded against each othe
 
 Full details — two-process isolation, sampling, the timing protocol, the tripwires, and
 how each threshold was measured — are in [`docs/design.md`](docs/design.md).
+
+A full technical report — design, calibration methodology, and the adversarial
+evaluation — is at [docs/report.pdf](docs/report.pdf).
+
+### Judge architecture
+
+```mermaid
+flowchart LR
+  subgraph P["Parent — all judge logic, no agent code"]
+    A["Verify MANIFEST hashes<br/>+ determinism control"] --> B["Sample prompt sets<br/>from run nonce"]
+    B --> C["Reference outputs<br/><b>in memory only</b>"]
+    C --> D["Time naive path<br/>(warm-ups, drift probes)"]
+    D --> E["Grade every output,<br/>compute M, score"]
+  end
+  subgraph K["Child — agent code only, no reference data"]
+    F["Capture clock<br/><b>before</b> agent import"] --> G["Import solution.py<br/>(sanitized sys.path)"]
+    G --> H["Smoke + equivalence calls"]
+    H --> I["Timed calls<br/>(wall + CPU time)"]
+  end
+  P -- "prompts, just-in-time per call" --> K
+  K -- "outputs + timings, sha-verified" --> E
+```
 
 ## Adversarial evaluation
 
@@ -132,7 +156,7 @@ correct response is to rerun, not to adjust anything.
 | `tests/exploits/` | eight adversarial baselines, pinned at their measured outcomes |
 | `tests/` | the 30-test suite over the judge, the reference, the exploits, and the model |
 | `tools/` | offline asset prep: trains and validates `starter/weights.pt` |
-| `docs/` | design, threat model, and extension notes |
+| `docs/` | design, threat model, and extension notes, plus the full technical report (`report.pdf`, with `report.tex` source) |
 
 ## Extending
 

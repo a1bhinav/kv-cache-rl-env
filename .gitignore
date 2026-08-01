@@ -13,3 +13,6 @@ logs/
 *.toc
 *.synctex.gz
 *.out
+docs/*.log
+docs/*.fls
+docs/*.fdb_latexmk
