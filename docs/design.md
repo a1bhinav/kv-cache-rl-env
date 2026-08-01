@@ -93,6 +93,18 @@ no score.
 | 7 | Plausibility: M > 128 | `INVALID_RUN` + `ANOMALOUS_SPEED` |
 | 7b | Parallelism: CPU/wall > 2.5 on any timed call | `INVALID_RUN` + `ANOMALOUS_PARALLELISM` |
 
+Gate 0's manifest check covers the pristine `starter/` assets and the corpus grammar
+module, and it is deliberately unforgiving: any hash that does not match the file on
+disk stops the run at `INVALID_RUN` before a single line of candidate code executes.
+That is the intended failure mode for silent tampering — an altered reference model or
+a drifted prompt grammar produces a refusal to run rather than a quietly wrong score.
+The cost is that *deliberate* edits to a pinned file must be re-recorded on purpose:
+run `python tools/make_manifest.py` to see a pinned-vs-current table (exit 1 on drift)
+and `--write` to re-pin. Re-pinning is a real change to an integrity record, so it
+belongs in its own reviewable commit, and the equivalence figures in
+[Calibration](#calibration) should reproduce exactly afterwards — if they move, the
+edit was not as cosmetic as it looked.
+
 Gate 4 grades **every** output the child ever returns — including the warm-up and the
 timing sets, not just E1–E3 — walking each row independently:
 
